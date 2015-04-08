@@ -3,7 +3,7 @@ import cv2
 import subprocess
 import os
 
-ffmpeg = "c:\\winprogs\\ffmpeg\\bin\\ffmpeg.exe"
+ffmpeg = "c:\\ffmpeg\\bin\\ffmpeg.exe"
 
 class VideoInput(threading.Thread):
     def __init__(self, device, subject_id, trial_name):
