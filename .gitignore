@@ -1,0 +1,7 @@
+data/
+events/
+
+*.pyc
+*.mpeg
+*.mpeg1
+*.avi
