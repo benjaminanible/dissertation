@@ -11,6 +11,7 @@ def present_practice(trial, exp, device):
     # start the video recording early so subjects don't have to wait for
     # the camera later
     video = VideoInput(device, exp.subject, trial.get_factor('name'))
+    video.mirror = True
     video.start()
     video.recording.wait()
 

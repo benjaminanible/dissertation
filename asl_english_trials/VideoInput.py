@@ -15,6 +15,7 @@ class VideoInput(threading.Thread):
 
         self.device = device
         self.filename = 'output-' + str(subject_id) + '-' + trial_name + '.avi'
+        self.mirror = False
 
     def run(self):
         self.open()
@@ -22,6 +23,8 @@ class VideoInput(threading.Thread):
         while not self.stop.is_set():
             ret, frame = self.device.read()
             if ret == True:
+                if self.mirror:
+                    frame = cv2.flip(frame, 1)
                 self.out.write(frame)
 
         self.close()
