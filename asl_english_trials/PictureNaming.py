@@ -72,7 +72,7 @@ def present_trial(trial, exp, device):
 
     video.stopped.wait()
 
-practice = ["arrest", "bleed", "gamble", "motorcycle", "rocket", "saw", "skate", "volleyball"]
+practice = ["gamble", "motorcycle", "rocket", "saw", "skate"]
 images = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
 e.design.randomize.shuffle_list(practice)
 e.design.randomize.shuffle_list(images)
