@@ -1,11 +1,14 @@
 import expyriment as e
 from VideoInput import VideoInput
 
+data_headers = ['item name', 'video filename', 'reaction time']
+
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
     exp.keyboard.wait()
 
 def present_practice(trial, exp, device):
+    e.control.start_audiosystem()
 
     # start the video recording early so subjects don't have to wait for
     # the camera later
@@ -16,28 +19,29 @@ def present_practice(trial, exp, device):
 
     trial.stimuli[1].present() # hold down space
     exp.keyboard.wait([e.misc.constants.K_SPACE])
+    trial.stimuli[3].present() # release space bar
+    exp.clock.wait(500) # wait a bit so the noise from the keyboard doesn't overlap the audio
 
-    trial.stimuli[2].present() # practice image
-    trial.stimuli[0].present() # blank
-    trial.stimuli[3].present(clear=False) # release space bar
+    trial.stimuli[2].present() # practice audio
     exp.keyboard.wait([e.misc.constants.K_SPACE], wait_for_keyup=True)
 
-    trial.stimuli[4].present() # sign the image
+    trial.stimuli[4].present() # sign the action
     exp.keyboard.wait()
     video.stop.set()
     filename = video.convert(trial.config['--ffmpeg'])
 
+    e.control.stop_audiosystem()
     trial.stimuli[5].present() # for reference
     exp.clock.wait(1500)
 
     trial.stimuli[0].present() # blank
     trial.stimuli[0].present() # blank
-    trial.stimuli[6].present() # play sample video
+    trial.stimuli[6].present() # sample video
     while trial.stimuli[6].is_playing:
         trial.stimuli[6].update()
     exp.clock.wait(1000)
 
-    trial.stimuli[7].present() # what you recorded
+    trial.stimuli[7].present() # recorded video
     exp.clock.wait(1500)
     trial.stimuli[0].present() # blank
     trial.stimuli[0].present() # blank
@@ -49,69 +53,75 @@ def present_practice(trial, exp, device):
     exp.clock.wait(1000)
 
 def present_trial(trial, exp, device):
+    e.control.start_audiosystem()
+
     video = VideoInput(device, exp.subject, trial.get_factor('name'))
     video.start()
     video.recording.wait()
 
     trial.stimuli[0].present() # hold down space
     exp.keyboard.wait([e.misc.constants.K_SPACE])
+    e.stimuli.TextLine('').present()
+    exp.clock.wait(500)
     space_down = exp.clock.stopwatch_time
 
-    trial.stimuli[1].present() # show image
+    trial.stimuli[1].present() # play audio
 
     exp.keyboard.wait([e.misc.constants.K_SPACE], wait_for_keyup=True)
     pressed_ms = exp.clock.stopwatch_time - space_down
 
-    trial.stimuli[2].present() # name the picture
+    exp.clock.wait(2000)
+    trial.stimuli[2].present()
     exp.keyboard.wait()
     trial.stimuli[3].present() # processing
     video.stop.set()
+    e.control.stop_audiosystem()
 
-    exp.data.add([trial.get_factor('name'), video.filename, trial.get_factor('type'), pressed_ms])
+    # exp.data.add([trial.get_factor('name'), video.filename, trial.get_factor('type'), pressed_ms])
 
     video.stopped.wait()
 
 practice = ["gamble", "motorcycle", "rocket", "saw", "skate"]
-images = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
+actions = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
 e.design.randomize.shuffle_list(practice)
-e.design.randomize.shuffle_list(images)
+e.design.randomize.shuffle_list(actions)
 
 blocks = []
 
-block = e.design.Block('Picture naming: Practice')
+block = e.design.Block('Translation production from audio: Practice')
 trial = e.design.Trial()
 intro = """
-In this task, you will be shown pictures of assorted activities.
+In this task, you will listen to a word spoken in English.
 
-Once you have identified the activity in the picture, please name it in ASL as quickly and accurately as you can.
+When you are ready, please translate the word to ASL as quickly and accurately as you can.
 
 First, let's try some practice trials. Press any key to continue.
 """
-trial.add_stimulus(e.stimuli.TextBox(intro, (640, 480), text_justification=0))
+trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 
-for idx, image in enumerate(practice):
+for idx, action in enumerate(practice[:2]):
     trial = e.design.Trial()
 
-    trial.set_factor('name', image)
+    trial.set_factor('name', action)
     trial.present_callback = present_practice
 
     trial.add_stimulus(e.stimuli.TextLine(''))
 
-    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
-    trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/practice/' + image + '.png'))
-    trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to name the activity', (0, -280)))
+    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar and listen to the English word that plays.'))
+    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/practice/' + action + '.ogg'))
+    trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to translate the word into ASL.'))
 
     sign = """
-    Name the activity in ASL. The camera will record you while you are signing.
+    Translate the word into ASL. The camera will record you while you are signing.
 
     When you are finished, press any key to continue.
     """
     trial.add_stimulus(e.stimuli.TextBox(sign, (640, 240), text_justification=0))
 
     trial.add_stimulus(e.stimuli.TextLine("For reference, here's the kind of thing we're looking for..."))
-    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + image + '.mpeg1'))
+    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + action + '.mpeg1'))
     trial.add_stimulus(e.stimuli.TextLine("...and here's what you recorded..."))
 
     block.add_trial(trial)
@@ -124,26 +134,22 @@ If you are confused, or the instructions are unclear, please talk to Benjamin be
 
 When you are ready to start the experiment, press any key.
 """
-trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 480), text_justification=0))
+trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 blocks.append(block)
 
-block = e.design.Block('Picture naming: Trial')
-for idx, image in enumerate(images):
+block = e.design.Block('Translation production from audio: Trial')
+for idx, action in enumerate(actions[:2]):
 
     trial = e.design.Trial()
     trial.present_callback = present_trial
 
-    action_type = 'p' if idx % 2 else 'np'
-    image_file = action_type + '_' + image + '.png'
-    trial.set_factor('type', action_type)
-    trial.set_factor('name', image)
+    trial.set_factor('name', action)
 
-    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
-    trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))
-    # todo: no text on the screen while signing
-    trial.add_stimulus(e.stimuli.TextLine('Name the activity in the picture and press any key to continue'))
+    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar to listen to the word, then translate it to ASL'))
+    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/trial/' + action + '.ogg'))
+    trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
     trial.add_stimulus(e.stimuli.TextLine('Processing...'))
 
     block.add_trial(trial, random_position=True)
