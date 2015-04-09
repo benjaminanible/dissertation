@@ -1,5 +1,4 @@
 import expyriment as e
-import logging as l
 from VideoInput import VideoInput
 
 def present_intro(trial, exp, device):
@@ -79,12 +78,9 @@ e.design.randomize.shuffle_list(images)
 
 blocks = []
 
-block = e.design.Block('Practice')
-
+block = e.design.Block('Picture naming: Practice')
 trial = e.design.Trial()
 intro = """
-Welcome!
-
 In this task, you will be shown pictures of assorted activities.
 
 Once you have identified the activity in the picture, please name it in ASL as quickly and accurately as you can.
@@ -93,7 +89,6 @@ First, let's try some practice trials. Press any key to continue.
 """
 trial.add_stimulus(e.stimuli.TextBox(intro, (640, 480), text_justification=0))
 trial.present_callback = present_intro
-
 block.add_trial(trial)
 
 for idx, image in enumerate(practice):
@@ -121,9 +116,20 @@ for idx, image in enumerate(practice):
 
     block.add_trial(trial)
 
+trial = e.design.Trial()
+intermission = """
+Nice job! You should be ready to start the real thing.
+
+If you are confused, or the instructions are unclear, please talk to Benjamin before you continue.
+
+When you are ready to start the experiment, press any key.
+"""
+trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 480), text_justification=0))
+trial.present_callback = present_intro
+block.add_trial(trial)
 blocks.append(block)
 
-block = e.design.Block('Trial')
+block = e.design.Block('Picture naming: Trial')
 for idx, image in enumerate(images):
 
     trial = e.design.Trial()
