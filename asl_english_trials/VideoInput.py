@@ -3,8 +3,6 @@ import cv2
 import subprocess
 import os
 
-ffmpeg = "c:\\ffmpeg\\bin\\ffmpeg.exe"
-
 class VideoInput(threading.Thread):
     def __init__(self, device, subject_id, trial_name):
         threading.Thread.__init__(self)
@@ -49,7 +47,7 @@ class VideoInput(threading.Thread):
 
         self.stopped.set()
 
-    def convert(self, delete=True):
+    def convert(self, ffmpeg, delete=True):
         self.stopped.wait()
 
         filename = self.filename + '.mpeg'

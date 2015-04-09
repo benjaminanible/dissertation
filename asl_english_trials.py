@@ -1,9 +1,29 @@
-import expyriment as e
-import cv2
-from asl_english_trials import PictureNaming
-from asl_english_trials.VideoInput import VideoInput
+"""ASL-English Translation Trials
+
+Usage:
+    asl_english_trials.py [options]
+
+Options:
+    -h, --help          show this help
+    -f, --ffmpeg EXE    specify ffmpeg executable [default: c:/ffmpeg/bin/ffmpeg.exe]
+"""
 
 if __name__ == '__main__':
+    import os
+    from docopt import docopt
+
+    config = docopt(__doc__)
+
+    # ffmpeg.exe has to exist
+    if not os.path.isfile(config['--ffmpeg']):
+        print config['--ffmpeg'], 'does not exist'
+        exit()
+
+    # don't load the dependencies if the args are wrong
+    import expyriment as e
+    import cv2
+    from asl_english_trials import PictureNaming
+
     try:
         exp = e.design.Experiment(name="Protocol 3: Picture Naming")
 
@@ -16,6 +36,7 @@ if __name__ == '__main__':
         for block in exp.blocks:
             for trial in block.trials:
                 trial.preload_stimuli()
+                trial.config = config
 
         device = cv2.VideoCapture(0)
         device.release()

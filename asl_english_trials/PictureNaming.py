@@ -26,7 +26,7 @@ def present_practice(trial, exp, device):
     trial.stimuli[4].present() # sign the image
     exp.keyboard.wait()
     video.stop.set()
-    filename = video.convert()
+    filename = video.convert(trial.config['--ffmpeg'])
 
     trial.stimuli[5].present() # for reference
     exp.clock.wait(1500)
