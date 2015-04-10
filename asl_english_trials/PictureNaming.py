@@ -97,7 +97,7 @@ Once you have identified the activity in the picture, please name it in ASL as q
 
 First, let's try some practice trials. Press any key to continue.
 """
-trial.add_stimulus(e.stimuli.TextBox(intro, (640, 480), text_justification=0))
+trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 
@@ -134,7 +134,7 @@ If you are confused, or the instructions are unclear, please talk to Benjamin be
 
 When you are ready to start the experiment, press any key.
 """
-trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 480), text_justification=0))
+trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 blocks.append(block)
