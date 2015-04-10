@@ -23,8 +23,7 @@ if __name__ == '__main__':
     import expyriment as e
     import cv2
     from traceback import format_exc
-    from asl_english_trials import PictureNaming as p
-    from asl_english_trials import TranslationProductionFromAudio as t
+    import asl_english_trials as protocols
 
     try:
         exp = e.design.Experiment(name="Protocol 3: Picture Naming")
@@ -39,11 +38,11 @@ if __name__ == '__main__':
         ]
         e.control.initialize(exp)
 
-        translation = t.TranslationProductionFromAudio()
+        translation = protocols.TranslationProductionFromAudio()
         for block in translation.blocks:
             exp.add_block(block)
 
-        naming = p.PictureNaming()
+        naming = protocols.PictureNaming()
         for block in naming.blocks:
             exp.add_block(block)
 
