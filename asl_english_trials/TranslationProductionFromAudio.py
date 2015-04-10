@@ -1,7 +1,7 @@
 import expyriment as e
 from VideoInput import VideoInput
 
-data_headers = ['item name', 'video filename', 'reaction time']
+protocol = "protocol-2-audio"
 
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
@@ -12,7 +12,7 @@ def present_practice(trial, exp, device):
 
     # start the video recording early so subjects don't have to wait for
     # the camera later
-    video = VideoInput(device, exp.subject, trial.get_factor('name'))
+    video = VideoInput(device, 'practice')
     video.mirror = True
     video.start()
     video.recording.wait()
@@ -55,7 +55,7 @@ def present_practice(trial, exp, device):
 def present_trial(trial, exp, device):
     e.control.start_audiosystem()
 
-    video = VideoInput(device, exp.subject, trial.get_factor('name'))
+    video = VideoInput(device, str(exp.subject) + '-' + protocol + '-' + trial.get_factor('item'))
     video.start()
     video.recording.wait()
 
@@ -77,14 +77,20 @@ def present_trial(trial, exp, device):
     video.stop.set()
     e.control.stop_audiosystem()
 
-    # exp.data.add([trial.get_factor('name'), video.filename, trial.get_factor('type'), pressed_ms])
+    exp.data.add([
+        protocol,
+        trial.get_factor('item'),
+        '',
+        pressed_ms,
+        video.filename
+    ])
 
     video.stopped.wait()
 
 practice = ["gamble", "motorcycle", "rocket", "saw", "skate"]
-actions = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
+items = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
 e.design.randomize.shuffle_list(practice)
-e.design.randomize.shuffle_list(actions)
+e.design.randomize.shuffle_list(items)
 
 blocks = []
 
@@ -101,16 +107,16 @@ trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 
-for idx, action in enumerate(practice[:2]):
+for idx, item in enumerate(practice):
     trial = e.design.Trial()
 
-    trial.set_factor('name', action)
+    trial.set_factor('item', item)
     trial.present_callback = present_practice
 
     trial.add_stimulus(e.stimuli.TextLine(''))
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar and listen to the English word that plays.'))
-    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/practice/' + action + '.ogg'))
+    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/practice/' + item + '.ogg'))
     trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to translate the word into ASL.'))
 
     sign = """
@@ -121,7 +127,7 @@ for idx, action in enumerate(practice[:2]):
     trial.add_stimulus(e.stimuli.TextBox(sign, (640, 240), text_justification=0))
 
     trial.add_stimulus(e.stimuli.TextLine("For reference, here's the kind of thing we're looking for..."))
-    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + action + '.mpeg1'))
+    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + item + '.mpeg1'))
     trial.add_stimulus(e.stimuli.TextLine("...and here's what you recorded..."))
 
     block.add_trial(trial)
@@ -140,15 +146,15 @@ block.add_trial(trial)
 blocks.append(block)
 
 block = e.design.Block('Translation production from audio: Trial')
-for idx, action in enumerate(actions[:2]):
+for idx, item in enumerate(items):
 
     trial = e.design.Trial()
     trial.present_callback = present_trial
 
-    trial.set_factor('name', action)
+    trial.set_factor('item', item)
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar to listen to the word, then translate it to ASL'))
-    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/trial/' + action + '.ogg'))
+    trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/trial/' + item + '.ogg'))
     trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
     trial.add_stimulus(e.stimuli.TextLine('Processing...'))
 

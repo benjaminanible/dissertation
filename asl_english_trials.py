@@ -5,7 +5,7 @@ Usage:
 
 Options:
     -h, --help          show this help
-    -f, --ffmpeg EXE    specify ffmpeg executable [default: c:/ffmpeg/bin/ffmpeg.exe]
+    -f, --ffmpeg EXE    ffmpeg executable [default: c:/ffmpeg/bin/ffmpeg.exe]
 """
 
 if __name__ == '__main__':
@@ -23,15 +23,26 @@ if __name__ == '__main__':
     import expyriment as e
     import cv2
     from asl_english_trials import PictureNaming
+    from asl_english_trials import TranslationProductionFromAudio
 
     try:
         exp = e.design.Experiment(name="Protocol 3: Picture Naming")
+        exp.data_variable_names = [
+            'subject id',
+            'protocol',
+            'item',
+            'type',
+            'reaction time',
+            'output filename'
+        ]
+
+        for block in TranslationProductionFromAudio.blocks:
+            exp.add_block(block)
 
         for block in PictureNaming.blocks:
             exp.add_block(block)
 
         e.control.initialize(exp)
-        exp.data_variable_names = ['picture name', 'video filename', 'type', 'reaction time']
 
         for block in exp.blocks:
             for trial in block.trials:

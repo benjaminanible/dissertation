@@ -1,6 +1,8 @@
 import expyriment as e
 from VideoInput import VideoInput
 
+protocol = "protocol-3"
+
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
     exp.keyboard.wait()
@@ -9,7 +11,7 @@ def present_practice(trial, exp, device):
 
     # start the video recording early so subjects don't have to wait for
     # the camera later
-    video = VideoInput(device, exp.subject, trial.get_factor('name'))
+    video = VideoInput(device, 'practice')
     video.mirror = True
     video.start()
     video.recording.wait()
@@ -49,7 +51,7 @@ def present_practice(trial, exp, device):
     exp.clock.wait(1000)
 
 def present_trial(trial, exp, device):
-    video = VideoInput(device, exp.subject, trial.get_factor('name'))
+    video = VideoInput(device, str(exp.subject) + '-' + protocol + '-' + trial.get_factor('item'))
     video.start()
     video.recording.wait()
 
@@ -67,14 +69,20 @@ def present_trial(trial, exp, device):
     trial.stimuli[3].present() # processing
     video.stop.set()
 
-    exp.data.add([trial.get_factor('name'), video.filename, trial.get_factor('type'), pressed_ms])
+    exp.data.add([
+        protocol,
+        trial.get_factor('item'),
+        trial.get_factor('type'),
+        pressed_ms,
+        video.filename
+    ])
 
     video.stopped.wait()
 
 practice = ["gamble", "motorcycle", "rocket", "saw", "skate"]
-images = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
+items = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
 e.design.randomize.shuffle_list(practice)
-e.design.randomize.shuffle_list(images)
+e.design.randomize.shuffle_list(items)
 
 blocks = []
 
@@ -91,16 +99,16 @@ trial.add_stimulus(e.stimuli.TextBox(intro, (640, 480), text_justification=0))
 trial.present_callback = present_intro
 block.add_trial(trial)
 
-for idx, image in enumerate(practice):
+for idx, item in enumerate(practice):
     trial = e.design.Trial()
 
-    trial.set_factor('name', image)
+    trial.set_factor('item', item)
     trial.present_callback = present_practice
 
     trial.add_stimulus(e.stimuli.TextLine(''))
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
-    trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/practice/' + image + '.png'))
+    trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/practice/' + item + '.png'))
     trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to name the activity', (0, -280)))
 
     sign = """
@@ -111,7 +119,7 @@ for idx, image in enumerate(practice):
     trial.add_stimulus(e.stimuli.TextBox(sign, (640, 240), text_justification=0))
 
     trial.add_stimulus(e.stimuli.TextLine("For reference, here's the kind of thing we're looking for..."))
-    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + image + '.mpeg1'))
+    trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + item + '.mpeg1'))
     trial.add_stimulus(e.stimuli.TextLine("...and here's what you recorded..."))
 
     block.add_trial(trial)
@@ -130,15 +138,15 @@ block.add_trial(trial)
 blocks.append(block)
 
 block = e.design.Block('Picture naming: Trial')
-for idx, image in enumerate(images):
+for idx, item in enumerate(items):
 
     trial = e.design.Trial()
     trial.present_callback = present_trial
 
     action_type = 'p' if idx % 2 else 'np'
-    image_file = action_type + '_' + image + '.png'
+    image_file = action_type + '_' + item + '.png'
     trial.set_factor('type', action_type)
-    trial.set_factor('name', image)
+    trial.set_factor('item', item)
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
     trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))

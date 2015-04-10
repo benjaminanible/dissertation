@@ -4,7 +4,7 @@ import subprocess
 import os
 
 class VideoInput(threading.Thread):
-    def __init__(self, device, subject_id, trial_name):
+    def __init__(self, device, video_id):
         threading.Thread.__init__(self)
 
         self.stop = threading.Event()
@@ -12,7 +12,7 @@ class VideoInput(threading.Thread):
         self.stopped = threading.Event()
 
         self.device = device
-        self.filename = 'output-' + str(subject_id) + '-' + trial_name + '.avi'
+        self.filename = 'output-' + video_id + '.avi'
         self.mirror = False
 
     def run(self):
@@ -51,7 +51,7 @@ class VideoInput(threading.Thread):
         self.stopped.wait()
 
         filename = self.filename + '.mpeg'
-        subprocess.call([ffmpeg, '-i', self.filename, '-f', 'mpeg1video', '-c:v', 'mpeg1video', filename])
+        subprocess.call([ffmpeg, '-i', self.filename, '-y', '-f', 'mpeg1video', '-c:v', 'mpeg1video', filename])
 
         if delete:
             os.remove(self.filename)
