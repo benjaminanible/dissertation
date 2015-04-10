@@ -96,12 +96,6 @@ class TranslationProductionFromVideo(object):
                 trial.set_factor('item', item)
                 trial.set_factor('subject', subject)
 
-                space_bar = """
-                Press enter to view the ASL sign.
-
-                When you are ready, translate the sign into English.
-                """
-                trial.add_stimulus(e.stimuli.TextBox(space_bar, (640, 240), text_justification=0))
                 trial.add_stimulus(e.stimuli.Video('stimuli/protocol-2/trial/' + item + '.mpeg1'))
                 trial.add_stimulus(e.stimuli.TextLine('Press enter to continue'))
                 trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
@@ -174,25 +168,22 @@ def present_trial(trial, exp, device):
     if trial.get_factor('subject') != subject:
         return
 
-    audio_id = str(exp.subject) + '-' + TranslationProductionFromVideo.protocol + '-' + trial.get_factor('item')
-    audio = AudioInput(audio_id)
-
     blank_line = e.stimuli.TextLine('')
 
-    trial.stimuli[0].present() # press enter and watch
-    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
+    audio_id = str(exp.subject) + '-' + TranslationProductionFromVideo.protocol + '-' + trial.get_factor('item')
+    audio = AudioInput(audio_id)
     audio.start()
 
     blank_line.present() # blank
     blank_line.present() # blank
-    trial.stimuli[1].present() # sample video
-    while trial.stimuli[1].is_playing:
-        trial.stimuli[1].update()
+    trial.stimuli[0].present() # sample video
+    while trial.stimuli[0].is_playing:
+        trial.stimuli[0].update()
 
-    trial.stimuli[2].present() # press enter to continue
+    trial.stimuli[1].present() # press enter to continue
     exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
 
-    trial.stimuli[3].present()
+    trial.stimuli[2].present()
     audio.stop.set()
 
     exp.data.add([
