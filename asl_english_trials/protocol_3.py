@@ -1,5 +1,5 @@
 import expyriment as e
-from VideoInput import VideoInput
+from video_input import VideoInput
 
 class PictureNaming(object):
     protocol = "protocol-3"

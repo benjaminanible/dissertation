@@ -1,5 +1,5 @@
 import expyriment as e
-from AudioInput import AudioInput
+from audio_io import AudioInput
 
 class TranslationProductionFromVideo(object):
     protocol = "protocol-2-video"
