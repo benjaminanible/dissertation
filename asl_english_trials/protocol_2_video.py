@@ -18,7 +18,8 @@ class TranslationProductionFromVideo(object):
             self.intro(),
             self.practice(),
             self.intermission(),
-            self.trial()
+            self.trial(),
+            self.finish()
         ]
 
     def intro(self):
@@ -106,6 +107,24 @@ class TranslationProductionFromVideo(object):
                 trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
 
                 block.add_trial(trial, random_position=True)
+
+        return block
+
+    def finish(self):
+        block = e.design.Block('Translation production from video: Finish')
+
+        trial = e.design.Trial()
+        intermission = """
+        Congratulations, you've made it through this segment of the experiment!
+
+        Feel free to get up, walk around, stretch, get some snacks.
+
+        When you're ready, press enter to continue.
+        """
+        trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
+        trial.present_callback = present_intro
+
+        block.add_trial(trial)
 
         return block
 
