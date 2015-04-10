@@ -193,7 +193,7 @@ def present_trial(trial, exp, device):
 
     exp.data.add([
         TranslationProductionFromAudio.protocol,
-        'list1' if trial.get_factor('subject') is 'even' else 'list2',
+        'list1' if trial.get_factor('subject') is 'odd' else 'list2',
         trial.get_factor('item'),
         '',
         intro_time,
