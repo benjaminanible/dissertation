@@ -5,7 +5,7 @@ protocol = "protocol-2-audio"
 
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
-    exp.keyboard.wait()
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
 
 def present_practice(trial, exp, device):
     e.control.start_audiosystem()
@@ -26,7 +26,7 @@ def present_practice(trial, exp, device):
     exp.keyboard.wait([e.misc.constants.K_SPACE], wait_for_keyup=True)
 
     trial.stimuli[4].present() # sign the action
-    exp.keyboard.wait()
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
     video.stop.set()
     filename = video.convert(trial.config['--ffmpeg'])
 
@@ -74,7 +74,7 @@ def present_trial(trial, exp, device):
 
     exp.clock.wait(2000)
     trial.stimuli[2].present()
-    exp.keyboard.wait()
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
     trial.stimuli[3].present() # processing
     video.stop.set()
     e.control.stop_audiosystem()
@@ -104,7 +104,7 @@ In this task, you will listen to a word spoken in English.
 
 When you are ready, please translate the word to ASL as quickly and accurately as you can.
 
-First, let's try some practice trials. Press any key to continue.
+First, let's try some practice trials. Press enter to continue.
 """
 trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
 trial.present_callback = present_intro
@@ -125,11 +125,11 @@ for idx, item in enumerate(practice):
     sign = """
     Translate the word into ASL. The camera will record you while you are signing.
 
-    When you are finished, press any key to continue.
+    When you are finished, press enter to continue.
     """
     trial.add_stimulus(e.stimuli.TextBox(sign, (640, 240), text_justification=0))
 
-    trial.add_stimulus(e.stimuli.TextLine("For reference, here's the kind of thing we're looking for..."))
+    trial.add_stimulus(e.stimuli.TextLine("For reference, here's the kind of sign we're looking for..."))
     trial.add_stimulus(e.stimuli.Video('stimuli/practice/' + item + '.mpeg1'))
     trial.add_stimulus(e.stimuli.TextLine("...and here's what you recorded..."))
 
@@ -141,7 +141,7 @@ Nice job! You should be ready to start the real thing.
 
 If you are confused, or the instructions are unclear, please talk to Benjamin before you continue.
 
-When you are ready to start the experiment, press any key.
+When you are ready to start the experiment, press enter.
 """
 trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
 trial.present_callback = present_intro
@@ -158,7 +158,7 @@ for idx, item in enumerate(items):
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar to listen to the word, then translate it to ASL'))
     trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/trial/' + item + '.ogg'))
-    trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
+    trial.add_stimulus(e.stimuli.TextLine('Press enter to continue'))
     trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
 
     block.add_trial(trial, random_position=True)

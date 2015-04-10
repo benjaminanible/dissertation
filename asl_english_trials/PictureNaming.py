@@ -5,7 +5,7 @@ protocol = "protocol-3"
 
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
-    exp.keyboard.wait()
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
 
 def present_practice(trial, exp, device):
 
@@ -25,7 +25,7 @@ def present_practice(trial, exp, device):
     exp.keyboard.wait([e.misc.constants.K_SPACE], wait_for_keyup=True)
 
     trial.stimuli[4].present() # sign the image
-    exp.keyboard.wait()
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
     video.stop.set()
     filename = video.convert(trial.config['--ffmpeg'])
 
@@ -69,8 +69,8 @@ def present_trial(trial, exp, device):
     e.stimuli.TextLine('').present()
 
     exp.clock.wait(1500)
-    trial.stimuli[2].present() # press any key
-    exp.keyboard.wait()
+    trial.stimuli[2].present() # press enter
+    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
     trial.stimuli[3].present() # processing
     video.stop.set()
 
@@ -99,7 +99,7 @@ In this task, you will be shown pictures of assorted activities.
 
 Once you have identified the activity in the picture, please name it in ASL as quickly and accurately as you can.
 
-First, let's try some practice trials. Press any key to continue.
+First, let's try some practice trials. Press enter to continue.
 """
 trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
 trial.present_callback = present_intro
@@ -120,7 +120,7 @@ for idx, item in enumerate(practice):
     sign = """
     Name the activity in ASL. The camera will record you while you are signing.
 
-    When you are finished, press any key to continue.
+    When you are finished, press enter to continue.
     """
     trial.add_stimulus(e.stimuli.TextBox(sign, (640, 240), text_justification=0))
 
@@ -136,7 +136,7 @@ Nice job! You should be ready to start the real thing.
 
 If you are confused, or the instructions are unclear, please talk to Benjamin before you continue.
 
-When you are ready to start the experiment, press any key.
+When you are ready to start the experiment, press enter.
 """
 trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
 trial.present_callback = present_intro
@@ -156,7 +156,7 @@ for idx, item in enumerate(items):
 
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar, and release it when you are ready to name the picture'))
     trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))
-    trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
+    trial.add_stimulus(e.stimuli.TextLine('Press enter to continue'))
     trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
 
     block.add_trial(trial, random_position=True)
