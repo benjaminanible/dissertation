@@ -194,7 +194,6 @@ def present_practice(trial, exp, device):
     e.stimuli.TextLine(line).present()
     exp.clock.wait(2000)
 
-    trial.stimuli[3].present() # please wait...
     while e.control.get_audiosystem_is_playing():
         pass
 
