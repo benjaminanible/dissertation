@@ -21,9 +21,9 @@ class PictureNaming(object):
         block = e.design.Block('Picture naming: Intro')
         trial = e.design.Trial()
         intro = """
-        In this task, you will be shown pictures of assorted activities.
+        In this task, you will be shown pictures of assorted actions.
 
-        Once you have identified the activity in the picture, please name it in ASL as quickly and accurately as you can.
+        Once you have identified the action in the picture, please name it in ASL as quickly and accurately as you can.
 
         First, let's try some practice trials. Press enter to continue.
         """
@@ -46,10 +46,10 @@ class PictureNaming(object):
 
             trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
             trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/practice/' + item + '.png'))
-            trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to name the activity', (0, -280)))
+            trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to name the action in the picture', (0, -280)))
 
             sign = """
-            Name the activity in ASL. The camera will record you while you are signing.
+            Name the action in ASL. The camera will record you while you are signing.
 
             When you are finished, press enter to continue.
             """
@@ -93,7 +93,7 @@ class PictureNaming(object):
             trial.set_factor('condition', action_type)
             trial.set_factor('item', item)
 
-            trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar, and release it when you are ready to name the picture'))
+            trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar, and release it when you are ready to name the action in the picture'))
             trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))
             trial.add_stimulus(e.stimuli.TextLine('Press enter to continue'))
             trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
