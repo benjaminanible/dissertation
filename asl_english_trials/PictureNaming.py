@@ -157,7 +157,7 @@ for idx, item in enumerate(items):
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar, and release it when you are ready to name the picture'))
     trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))
     trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
-    trial.add_stimulus(e.stimuli.TextLine('Processing...'))
+    trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
 
     block.add_trial(trial, random_position=True)
 

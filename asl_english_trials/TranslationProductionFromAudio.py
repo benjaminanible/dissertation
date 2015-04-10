@@ -159,7 +159,7 @@ for idx, item in enumerate(items):
     trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar to listen to the word, then translate it to ASL'))
     trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/trial/' + item + '.ogg'))
     trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
-    trial.add_stimulus(e.stimuli.TextLine('Processing...'))
+    trial.add_stimulus(e.stimuli.TextLine('Please wait...'))
 
     block.add_trial(trial, random_position=True)
 
