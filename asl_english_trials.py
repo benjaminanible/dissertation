@@ -34,7 +34,7 @@ if __name__ == '__main__':
             'condition',
             'intro time',
             'reaction time',
-            'output filename'
+            'output'
         ]
         e.control.initialize(exp)
 
