@@ -1,7 +1,6 @@
 import expyriment as e
 import csv
 from collections import namedtuple
-from audio_io import DelayedAudioOutput
 
 Stimuli = namedtuple('Stimuli', ['item', 'video', 'audio', 'condition'])
 
@@ -205,8 +204,8 @@ def present_trial(trial, exp, device):
 
     # run trials based on the subject id
     # (THIS IS SO CHEATING)
-    order = 3 - (exp.subject % 3) # will be 4 when list3 is fixed
-    if order == 3: order = 4
+    order = exp.subject % 3 # will be 4 when list3 is fixed
+    if not order: order = 4 # will be 4 when list3 is fixed
     if trial.get_factor('list') != 'list'+str(order):
         return
 
