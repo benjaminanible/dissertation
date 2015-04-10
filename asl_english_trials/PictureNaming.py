@@ -63,8 +63,10 @@ def present_trial(trial, exp, device):
 
     exp.keyboard.wait([e.misc.constants.K_SPACE], wait_for_keyup=True)
     pressed_ms = exp.clock.stopwatch_time - space_down
+    e.stimuli.TextLine('').present()
 
-    trial.stimuli[2].present() # name the picture
+    exp.clock.wait(1500)
+    trial.stimuli[2].present() # press any key
     exp.keyboard.wait()
     trial.stimuli[3].present() # processing
     video.stop.set()
@@ -148,10 +150,9 @@ for idx, item in enumerate(items):
     trial.set_factor('type', action_type)
     trial.set_factor('item', item)
 
-    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar'))
+    trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar, and release it when you are ready to name the picture'))
     trial.add_stimulus(e.stimuli.Picture('stimuli/protocol-3/trial/' + image_file))
-    # todo: no text on the screen while signing
-    trial.add_stimulus(e.stimuli.TextLine('Name the activity in the picture and press any key to continue'))
+    trial.add_stimulus(e.stimuli.TextLine('Press any key to continue'))
     trial.add_stimulus(e.stimuli.TextLine('Processing...'))
 
     block.add_trial(trial, random_position=True)
