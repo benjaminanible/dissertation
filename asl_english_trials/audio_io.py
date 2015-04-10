@@ -2,6 +2,18 @@ import threading, subprocess, time, os
 import pymedia.audio.sound as sound
 import pymedia.audio.acodec as acodec
 
+class DelayedAudioOutput(threading.Thread):
+    def __init__(self, audio_stimuli, delay):
+        threading.Thread.__init__(self)
+
+        self.audio = audio_stimuli
+        self.delay = delay / 1000.0
+
+    def run(self):
+        time.sleep(self.delay)
+
+        self.audio.present()
+
 class AudioInput(threading.Thread):
     def __init__(self, audio_id):
         threading.Thread.__init__(self)

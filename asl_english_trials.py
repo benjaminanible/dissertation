@@ -38,11 +38,12 @@ if __name__ == '__main__':
         ]
         e.control.initialize(exp)
 
+        transrecog = protocols.TranslationRecognition()
         transaudio = protocols.TranslationProductionFromAudio()
         transvideo = protocols.TranslationProductionFromVideo()
         naming = protocols.PictureNaming()
 
-        for block in transvideo.blocks + transaudio.blocks + naming.blocks:
+        for block in transrecog.blocks + transvideo.blocks + transaudio.blocks + naming.blocks:
             exp.add_block(block)
 
         for block in exp.blocks:
