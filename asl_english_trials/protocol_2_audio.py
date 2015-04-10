@@ -52,7 +52,7 @@ class TranslationProductionFromAudio(object):
             trial.add_stimulus(e.stimuli.TextLine(''))
 
             trial.add_stimulus(e.stimuli.TextLine('Hold down the space bar and listen to the English word that plays.'))
-            trial.add_stimulus(e.stimuli.Audio('stimuli/protocol-2/practice/' + item + '.ogg'))
+            trial.add_stimulus(e.stimuli.Audio('stimuli/practice/' + item + '.ogg'))
             trial.add_stimulus(e.stimuli.TextLine('Release the space bar when you are ready to translate the word into ASL.'))
 
             sign = """
