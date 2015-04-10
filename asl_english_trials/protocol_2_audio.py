@@ -5,8 +5,8 @@ class TranslationProductionFromAudio(object):
     protocol = "protocol-2-audio"
     practice_items = ["gamble", "motorcycle", "rocket", "saw", "skate"]
     trial_items = {
-        "odd": ["pay", "pray", "protest", "shoot", "sleep", "smoke", "stand", "swim", "think", "vomit", "win", "write"],
-        "even": ["music", "pickup", "pour", "preach", "sew", "sit", "smell", "sweep", "telephone", "turn", "violin", "wash"]
+        "odd": ["open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"],
+        "even": ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music"]
     }
 
     def __init__(self):
