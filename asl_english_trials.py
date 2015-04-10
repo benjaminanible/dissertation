@@ -22,28 +22,30 @@ if __name__ == '__main__':
     # don't load the dependencies if the args are wrong
     import expyriment as e
     import cv2
-    from asl_english_trials import PictureNaming
-    from asl_english_trials import TranslationProductionFromAudio
+    from traceback import format_exc
+    from asl_english_trials import PictureNaming as p
+    from asl_english_trials import TranslationProductionFromAudio as t
 
     try:
         exp = e.design.Experiment(name="Protocol 3: Picture Naming")
         exp.data_variable_names = [
-            'subject id',
             'protocol',
+            'list',
             'item',
-            'type',
+            'condition',
             'intro time',
             'reaction time',
             'output filename'
         ]
-
-        for block in TranslationProductionFromAudio.blocks:
-            exp.add_block(block)
-
-        for block in PictureNaming.blocks:
-            exp.add_block(block)
-
         e.control.initialize(exp)
+
+        translation = t.TranslationProductionFromAudio()
+        for block in translation.blocks:
+            exp.add_block(block)
+
+        naming = p.PictureNaming()
+        for block in naming.blocks:
+            exp.add_block(block)
 
         for block in exp.blocks:
             for trial in block.trials:
@@ -59,5 +61,7 @@ if __name__ == '__main__':
         for block in exp.blocks:
             for trial in block.trials:
                  trial.present_callback(trial, exp, device)
+    except BaseException as ex:
+        print format_exc()
     finally:
         e.control.end(system_exit=True)
