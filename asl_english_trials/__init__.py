@@ -14,4 +14,5 @@ __version__ = "0.0.1"
 
 
 from .protocol_2_audio import TranslationProductionFromAudio
+from .protocol_2_video import TranslationProductionFromVideo
 from .protocol_3 import PictureNaming
