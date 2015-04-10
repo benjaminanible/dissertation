@@ -32,6 +32,7 @@ if __name__ == '__main__':
             'protocol',
             'item',
             'type',
+            'intro time',
             'reaction time',
             'output filename'
         ]

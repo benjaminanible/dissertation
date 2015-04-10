@@ -51,6 +51,8 @@ def present_practice(trial, exp, device):
     exp.clock.wait(1000)
 
 def present_trial(trial, exp, device):
+    start = exp.clock.stopwatch_time
+
     video = VideoInput(device, str(exp.subject) + '-' + protocol + '-' + trial.get_factor('item'))
     video.start()
     video.recording.wait()
@@ -58,6 +60,7 @@ def present_trial(trial, exp, device):
     trial.stimuli[0].present() # hold down space
     exp.keyboard.wait([e.misc.constants.K_SPACE])
     space_down = exp.clock.stopwatch_time
+    intro_time = space_down - start
 
     trial.stimuli[1].present() # show image
 
@@ -75,6 +78,7 @@ def present_trial(trial, exp, device):
         protocol,
         trial.get_factor('item'),
         trial.get_factor('type'),
+        intro_time,
         pressed_ms,
         video.filename
     ])

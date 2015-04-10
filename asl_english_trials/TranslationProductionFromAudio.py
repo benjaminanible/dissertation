@@ -53,6 +53,7 @@ def present_practice(trial, exp, device):
     exp.clock.wait(1000)
 
 def present_trial(trial, exp, device):
+    start = exp.clock.stopwatch_time
     e.control.start_audiosystem()
 
     video = VideoInput(device, str(exp.subject) + '-' + protocol + '-' + trial.get_factor('item'))
@@ -64,6 +65,7 @@ def present_trial(trial, exp, device):
     e.stimuli.TextLine('').present()
     exp.clock.wait(500)
     space_down = exp.clock.stopwatch_time
+    intro_time = space_down - start
 
     trial.stimuli[1].present() # play audio
 
@@ -81,6 +83,7 @@ def present_trial(trial, exp, device):
         protocol,
         trial.get_factor('item'),
         '',
+        intro_time,
         pressed_ms,
         video.filename
     ])
