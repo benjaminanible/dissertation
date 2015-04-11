@@ -119,6 +119,7 @@ class TranslationProductionFromAudio(object):
 
         When you're ready, press the "up" arrow to continue.
         """
+        trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_colour=(242, 239, 34), text_justification=0))
         trial.present_callback = present_finish
 
         block.add_trial(trial)

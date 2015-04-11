@@ -108,18 +108,20 @@ class PictureNaming(object):
 
         trial = e.design.Trial()
         intermission = """
-        Congratulations, you've made it through this segment of the experiment!
+        Congratulations, you've made it through!
 
-        Feel free to get up, walk around, stretch, get some snacks.
-
-        When you're ready, press enter to continue.
+        Thanks for participating. Press the "up" arrow to end the experiment.
         """
-        trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
-        trial.present_callback = present_intro
+        trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_colour=(242, 239, 34), text_justification=0))
+        trial.present_callback = present_finish
 
         block.add_trial(trial)
 
         return block
+
+def present_finish(trial, exp, device):
+    trial.stimuli[0].present()
+    exp.keyboard.wait([e.misc.constants.K_UP])
 
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
