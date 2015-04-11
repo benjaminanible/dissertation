@@ -63,4 +63,8 @@ if __name__ == '__main__':
     except BaseException as ex:
         print format_exc()
     finally:
-        e.control.end(system_exit=True)
+        e.control.end()
+
+    data, headers, info, comments = e.misc.data_preprocessing.read_datafile(exp.data.fullpath)
+    e.misc.data_preprocessing.write_csv_file(exp.data.fullpath+'.csv', data, headers)
+    os.remove(exp.data.fullpath)
