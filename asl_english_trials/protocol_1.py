@@ -49,7 +49,7 @@ class TranslationRecognition(object):
         intro = """
         In this task, you will view a sign in ASL and listen to a word in English.
 
-        When you are ready, please indicate whether the ASL sign and the English word are equivalent translations.
+        As quickly and accurately as you can, indicate whether the ASL sign and the English word are equivalent translations.
 
         First, let's try some practice trials. Press enter to continue.
         """
@@ -126,12 +126,6 @@ class TranslationRecognition(object):
 
                 trial.present_callback = present_trial
 
-                intro = """
-                Press enter to view the ASL sign/English word pair.
-
-                When you are ready, press the "yes" key if the sign and word are equivalent translations, and the "no" key if they are not.
-                """
-                trial.add_stimulus(e.stimuli.TextBox(intro, (640, 240), text_justification=0))
                 trial.add_stimulus(e.stimuli.Audio(audio_file))
                 trial.add_stimulus(e.stimuli.Video(video_file))
                 trial.add_stimulus(e.stimuli.TextLine("Please wait..."))
@@ -210,18 +204,15 @@ def present_trial(trial, exp, device):
 
     blank_line = e.stimuli.TextLine('')
 
-    trial.stimuli[0].present() # press enter and watch/listen
-    exp.keyboard.wait([e.misc.constants.K_KP_ENTER, e.misc.constants.K_RETURN])
-
     blank_line.present()
     blank_line.present()
-    trial.stimuli[2].present()
-    while trial.stimuli[2].is_playing:
-        trial.stimuli[2].update()
+    trial.stimuli[1].present()
+    while trial.stimuli[1].is_playing:
+        trial.stimuli[1].update()
 
     e.control.start_audiosystem()
     blank_line.present()
-    trial.stimuli[1].present()
+    trial.stimuli[0].present()
     audio_start = exp.clock.stopwatch_time
 
     key, rt = exp.keyboard.wait([e.misc.constants.K_c, e.misc.constants.K_m])
@@ -229,7 +220,8 @@ def present_trial(trial, exp, device):
 
     response = 'yes' if key == e.misc.constants.K_c else 'no'
 
-    trial.stimuli[3].present() # please wait...
+    trial.stimuli[2].present() # please wait...
+    exp.clock.wait(1500)
 
     exp.data.add([
         TranslationRecognition.protocol,
