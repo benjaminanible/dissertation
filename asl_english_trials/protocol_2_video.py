@@ -172,6 +172,9 @@ def present_trial(trial, exp, device):
     if trial.get_factor('subject') != subject:
         return
 
+    e.stimuli.FixCross().present()
+    exp.clock.wait(2000)
+
     blank_line = e.stimuli.TextLine('')
 
     audio_id = str(exp.subject) + '-' + TranslationProductionFromVideo.protocol + '-' + trial.get_factor('item')
