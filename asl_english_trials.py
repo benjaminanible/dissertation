@@ -9,7 +9,7 @@ Options:
 """
 
 if __name__ == '__main__':
-    import os
+    import os, errno, sys
     from docopt import docopt
 
     config = docopt(__doc__)
@@ -25,23 +25,28 @@ if __name__ == '__main__':
     from traceback import format_exc
     import asl_english_trials as protocols
 
-    try:
-        exp = e.design.Experiment(name="Protocol 3: Picture Naming")
-        exp.data_variable_names = [
-            'protocol',
-            'list',
-            'item',
-            'condition',
-            'intro time',
-            'reaction time',
-            'output'
-        ]
-        e.control.initialize(exp)
+    exp = e.design.Experiment(name="Protocol 3: Picture Naming")
+    exp.data_variable_names = [
+        'protocol',
+        'list',
+        'item',
+        'condition',
+        'intro time',
+        'reaction time',
+        'output'
+    ]
 
-        transrecog = protocols.TranslationRecognition()
-        transaudio = protocols.TranslationProductionFromAudio()
-        transvideo = protocols.TranslationProductionFromVideo()
-        naming = protocols.PictureNaming()
+    output_dir = 'data/media'
+    transrecog = protocols.TranslationRecognition()
+    transaudio = protocols.TranslationProductionFromAudio(output_dir)
+    transvideo = protocols.TranslationProductionFromVideo(output_dir)
+    naming = protocols.PictureNaming(output_dir)
+
+    device = cv2.VideoCapture(0)
+    device.release()
+
+    try:
+        e.control.initialize(exp)
 
         for block in transrecog.blocks + transvideo.blocks + transaudio.blocks + naming.blocks:
             exp.add_block(block)
@@ -50,9 +55,6 @@ if __name__ == '__main__':
             for trial in block.trials:
                 trial.preload_stimuli()
                 trial.config = config
-
-        device = cv2.VideoCapture(0)
-        device.release()
 
         e.control.start(exp)
         e.control.stop_audiosystem()
@@ -65,6 +67,6 @@ if __name__ == '__main__':
     finally:
         e.control.end()
 
-    data, headers, info, comments = e.misc.data_preprocessing.read_datafile(exp.data.fullpath)
-    e.misc.data_preprocessing.write_csv_file(exp.data.fullpath+'.csv', data, headers)
-    os.remove(exp.data.fullpath)
+    if os.path.isfile(exp.data.fullpath):
+        data, headers, info, comments = e.misc.data_preprocessing.read_datafile(exp.data.fullpath)
+        e.misc.data_preprocessing.write_csv_file(exp.data.fullpath+'.csv', data, headers)

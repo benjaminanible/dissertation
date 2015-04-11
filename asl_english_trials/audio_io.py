@@ -15,14 +15,14 @@ class DelayedAudioOutput(threading.Thread):
         self.audio.present()
 
 class AudioInput(threading.Thread):
-    def __init__(self, audio_id):
+    def __init__(self, audio_id, out_dir='.'):
         threading.Thread.__init__(self)
 
         self.stop = threading.Event()
         self.recording = threading.Event()
         self.stopped = threading.Event()
 
-        self.filename = 'output-' + audio_id + '.mp3'
+        self.filename = out_dir+'/'+audio_id+'.mp3'
         self.encoder = acodec.Encoder({
             'id': acodec.getCodecID('mp3'),
             'bitrate': 96000,

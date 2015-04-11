@@ -1,3 +1,4 @@
+import os, errno
 import expyriment as e
 from video_input import VideoInput
 
@@ -9,7 +10,15 @@ class TranslationProductionFromAudio(object):
         "even": ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music"]
     }
 
-    def __init__(self):
+    def __init__(self, out_dir='.'):
+
+        try:
+            self.output_dir = out_dir+'/'+self.protocol
+            os.makedirs(self.output_dir)
+        except OSError as ex:
+            if ex.errno != errno.EEXIST:
+                raise
+
         e.design.randomize.shuffle_list(self.practice_items)
         e.design.randomize.shuffle_list(self.trial_items['odd'])
         e.design.randomize.shuffle_list(self.trial_items['even'])
@@ -95,6 +104,7 @@ class TranslationProductionFromAudio(object):
 
                 trial = e.design.Trial()
                 trial.present_callback = present_trial
+                trial.output_dir = self.output_dir
 
                 trial.set_factor('item', item)
                 trial.set_factor('subject', subject)
@@ -190,8 +200,8 @@ def present_trial(trial, exp, device):
     start = exp.clock.stopwatch_time
     e.control.start_audiosystem()
 
-    video_id = str(exp.subject) + '-' + TranslationProductionFromAudio.protocol + '-' + trial.get_factor('item')
-    video = VideoInput(device, video_id)
+    video_id = 'subject-'+str(exp.subject)+'-'+trial.get_factor('item')
+    video = VideoInput(device, video_id, trial.output_dir)
     video.start()
     video.recording.wait()
 

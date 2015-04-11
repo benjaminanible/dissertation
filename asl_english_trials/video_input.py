@@ -4,7 +4,7 @@ import subprocess
 import os
 
 class VideoInput(threading.Thread):
-    def __init__(self, device, video_id):
+    def __init__(self, device, video_id, out_dir='.'):
         threading.Thread.__init__(self)
 
         self.stop = threading.Event()
@@ -12,7 +12,7 @@ class VideoInput(threading.Thread):
         self.stopped = threading.Event()
 
         self.device = device
-        self.filename = 'output-' + video_id + '.avi'
+        self.filename = out_dir+'/'+video_id+'.avi'
         self.mirror = False
 
     def run(self):

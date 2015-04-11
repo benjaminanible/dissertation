@@ -1,3 +1,4 @@
+import os, errno
 import expyriment as e
 from video_input import VideoInput
 
@@ -6,7 +7,15 @@ class PictureNaming(object):
     practice_items = ["gamble", "motorcycle", "rocket", "saw", "skate"]
     trial_items = ["argue", "bite", "break", "camp", "carry", "climb", "comb", "count", "dig", "drink", "eat", "exercise", "fight", "haircut", "hide", "hug", "jump", "kick", "kiss", "knot", "listen", "look", "measure", "music", "open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
 
-    def __init__(self):
+    def __init__(self, out_dir='.'):
+
+        try:
+            self.output_dir = out_dir+'/'+self.protocol
+            os.makedirs(self.output_dir)
+        except OSError as ex:
+            if ex.errno != errno.EEXIST:
+                raise
+
         e.design.randomize.shuffle_list(self.practice_items)
         e.design.randomize.shuffle_list(self.trial_items)
 
@@ -88,6 +97,7 @@ class PictureNaming(object):
 
             trial = e.design.Trial()
             trial.present_callback = present_trial
+            trial.output_dir = self.output_dir
 
             action_type = 'p' if idx % 2 else 'np'
             image_file = action_type + '_' + item + '.png'
@@ -173,8 +183,8 @@ def present_practice(trial, exp, device):
 def present_trial(trial, exp, device):
     start = exp.clock.stopwatch_time
 
-    video_id = str(exp.subject) + '-' + PictureNaming.protocol + '-' + trial.get_factor('item')
-    video = VideoInput(device, video_id)
+    video_id = 'subject-'+str(exp.subject)+'-'+trial.get_factor('item')
+    video = VideoInput(device, video_id, trial.output_dir)
     video.start()
     video.recording.wait()
 

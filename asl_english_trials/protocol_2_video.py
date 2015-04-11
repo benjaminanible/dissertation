@@ -1,3 +1,4 @@
+import os, errno
 import expyriment as e
 from audio_io import AudioInput
 
@@ -9,7 +10,15 @@ class TranslationProductionFromVideo(object):
         "even": ["open", "pay", "pickup", "pour", "pray", "preach", "protest", "sew", "shoot", "sit", "sleep", "smell", "smoke", "stand", "sweep", "swim", "telephone", "think", "turn", "violin", "vomit", "wash", "win", "write"]
     }
 
-    def __init__(self):
+    def __init__(self, out_dir='.'):
+
+        try:
+            self.output_dir = out_dir+'/'+self.protocol
+            os.makedirs(self.output_dir)
+        except OSError as ex:
+            if ex.errno != errno.EEXIST:
+                raise
+
         e.design.randomize.shuffle_list(self.practice_items)
         e.design.randomize.shuffle_list(self.trial_items['odd'])
         e.design.randomize.shuffle_list(self.trial_items['even'])
@@ -92,6 +101,7 @@ class TranslationProductionFromVideo(object):
 
                 trial = e.design.Trial()
                 trial.present_callback = present_trial
+                trial.output_dir = self.output_dir
 
                 trial.set_factor('item', item)
                 trial.set_factor('subject', subject)
@@ -177,8 +187,8 @@ def present_trial(trial, exp, device):
 
     blank_line = e.stimuli.TextLine('')
 
-    audio_id = str(exp.subject) + '-' + TranslationProductionFromVideo.protocol + '-' + trial.get_factor('item')
-    audio = AudioInput(audio_id)
+    audio_id = 'subject-'+str(exp.subject)+'-'+trial.get_factor('item')
+    audio = AudioInput(audio_id, trial.output_dir)
     audio.start()
 
     blank_line.present() # blank
