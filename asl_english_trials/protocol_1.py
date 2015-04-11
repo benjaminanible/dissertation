@@ -136,7 +136,7 @@ class TranslationRecognition(object):
         return block
 
     def finish(self):
-        block = e.design.Block('Translation production from video: Finish')
+        block = e.design.Block('Translation recognition: Finish')
 
         trial = e.design.Trial()
         intermission = """
@@ -144,14 +144,17 @@ class TranslationRecognition(object):
 
         Feel free to get up, walk around, stretch, get some snacks.
 
-        When you're ready, press enter to continue.
+        When you're ready, press the "up" arrow to continue.
         """
-        trial.add_stimulus(e.stimuli.TextBox(intermission, (640, 240), text_justification=0))
-        trial.present_callback = present_intro
+        trial.present_callback = present_finish
 
         block.add_trial(trial)
 
         return block
+
+def present_finish(trial, exp, device):
+    trial.stimuli[0].present()
+    exp.keyboard.wait([e.misc.constants.K_UP])
 
 def present_intro(trial, exp, device):
     trial.stimuli[0].present()
