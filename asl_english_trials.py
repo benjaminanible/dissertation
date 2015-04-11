@@ -67,6 +67,19 @@ if __name__ == '__main__':
     finally:
         e.control.end()
 
+    # turn the output data file into a csv
+    # (we have to keep the xpd file around because expyriment uses it to get
+    # the next subject id)
     if os.path.isfile(exp.data.fullpath):
         data, headers, info, comments = e.misc.data_preprocessing.read_datafile(exp.data.fullpath)
         e.misc.data_preprocessing.write_csv_file(exp.data.fullpath+'.csv', data, headers)
+
+    # clean up practice files
+    try:
+        os.remove('practice.mp3.ogg')
+    except:
+        pass
+    try:
+        os.remove('practice.avi.mpeg')
+    except:
+        pass
