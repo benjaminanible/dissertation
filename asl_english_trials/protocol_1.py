@@ -16,7 +16,7 @@ class TranslationRecognition(object):
     trial_items = {
         'list1' : [],
         'list2' : [],
-        # 'list3' : [], # list3 is broken
+        'list3' : [],
         'list4' : [],
     }
 
@@ -201,8 +201,8 @@ def present_trial(trial, exp, device):
 
     # run trials based on the subject id
     # (THIS IS SO CHEATING)
-    order = exp.subject % 3 # will be 4 when list3 is fixed
-    if not order: order = 4 # will be 4 when list3 is fixed
+    order = exp.subject % 4
+    if not order: order = 4
     if trial.get_factor('list') != 'list'+str(order):
         return
 
