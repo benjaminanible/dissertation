@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19645.svg)](http://dx.doi.org/10.5281/zenodo.19645)
+
 # Requirements
 
 - Python 2.7 (not 3)
