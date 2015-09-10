@@ -41,6 +41,7 @@ if __name__ == '__main__':
     transaudio = protocols.TranslationProductionFromAudio(output_dir)
     transvideo = protocols.TranslationProductionFromVideo(output_dir)
     naming = protocols.PictureNaming(output_dir)
+    namingaudio = protocols.PictureNamingWithAudio(output_dir)
 
     device = cv2.VideoCapture(0)
     device.release()
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     try:
         e.control.initialize(exp)
 
-        for block in transrecog.blocks + transvideo.blocks + transaudio.blocks + naming.blocks:
+        for block in transrecog.blocks + transvideo.blocks + transaudio.blocks + naming.blocks + namingaudio.blocks:
             exp.add_block(block)
 
         for block in exp.blocks:

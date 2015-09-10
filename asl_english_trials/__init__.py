@@ -17,3 +17,4 @@ from .protocol_1 import TranslationRecognition
 from .protocol_2_audio import TranslationProductionFromAudio
 from .protocol_2_video import TranslationProductionFromVideo
 from .protocol_3 import PictureNaming
+from .protocol_3_audio import PictureNamingWithAudio
